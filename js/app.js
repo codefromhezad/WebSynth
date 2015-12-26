@@ -1,13 +1,17 @@
 jQuery( function($) {
-
-    // $('.ui-create-track').on('click', function(e) {
-    //     e.preventDefault();
-
-    //     return false;
-    // });
     
+    // Init sequencer    
     var seq = new Sequencer();
-    seq.addTrack();
+
+    // Bind general interface listeners
+    $('.toolbar .ui-create-track').on('click', function(e) {
+        e.preventDefault();
+
+        seq.addTrack();
+        
+        return false;
+    });
+    
 
     var mySynth = new SynthBase();
 

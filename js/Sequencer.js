@@ -22,6 +22,7 @@ var Sequencer = (function() {
 			$tracksContainer.append(newTrack.$trackDom);
 			$mixerContainer.append(newTrack.$mixerDom);
 
+			newTrack.setTitle("Track " + (this.tracks.length + 1));
 			this.tracks.push(newTrack);
 		}
 
