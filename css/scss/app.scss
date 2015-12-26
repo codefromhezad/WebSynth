@@ -3,6 +3,7 @@ html, body {
 	padding: 0;
 	font-family: Helvetica, Arial, Verdana, Sans;
 	font-size: 16px;
+	height: 100%;
 }
 
 .main-sequencer {
@@ -22,6 +23,53 @@ html, body {
 			-moz-border-radius: 0;
 			-webkit-border-radius: 0;
 			border-radius: 0;
+		}
+	}
+
+	.mixer {
+		position: absolute;
+		height: 250px;
+		left: 0;
+		width: 100%;
+		bottom: 0;
+		background: #4D4D4D;
+		overflow: hidden;
+		border-top: 1px solid #222;
+
+		.track {
+			width: 100px;
+			height: 100%;
+			border-right: 1px solid #222;
+			background: #656565;
+			float: left;
+			box-sizing: border-box;
+
+			.track-title {
+				line-height: 30px;
+				text-align: center;
+				background: #888;
+				border-bottom: 1px solid #444;
+			}
+
+			.track-effects {
+				.effect-holder {
+					border-bottom: 1px solid #444;
+					height: 16px;
+
+					&:hover, &:focus {
+						background: #555;
+					}
+				}
+			}
+
+			.track-volume {
+				text-align: center;
+				padding: 20px 0;
+
+				.fader {
+					display: inline-block;
+				}
+			}
 		}
 	}
 

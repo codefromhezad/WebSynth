@@ -53,12 +53,13 @@ var Track = function() {
 
 			slide: function(event, ui) {
 				that.volume = ui.value / 100;
+				console.log(ui.value);
 			}
 		});
 
 		// init base values
 		this.setVolume(0.8);
 		this.setTitle('New track');
-		
+
 	}
 }
