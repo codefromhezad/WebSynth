@@ -1,6 +1,7 @@
-var Track = function() {
+var Track = function(seq) {
 	this.audioContext;
 	this.gainNode;
+	this.sequencer = seq;
 
 	this.isMaster = false;
 	this.title;
@@ -46,8 +47,16 @@ var Track = function() {
 	}
 
 	this.addMidiClip = function(start, duration) {
+		var clipIndex = this.midiClips.length;
 		var newClip = new MidiClip(start, duration);
-		this.$clipsHolder.append(newclip.$dom);
+		newClip.$dom.attr('data-clip-index', clipIndex)
+					.css({
+						'width': Math.floor(this.sequencer.beatSpacing * duration) + 'px',
+						'left' : Math.floor(this.sequencer.beatSpacing * (start-1)) + 'px'
+					});
+
+		this.$clipsHolder.append(newClip.$dom);
+		this.midiClips.push(newClip);
 	}
 
 	this.setVolume = function(value) {

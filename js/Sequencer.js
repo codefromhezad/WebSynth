@@ -15,20 +15,23 @@ var Sequencer = (function() {
 		this.masterTrack;
 		this.beatSpacing;
 
+		this.activeTrackIndex;
 		this.activeTrack;
 
 		this.generateTimeline = function(numBars, beatSpacing) {
 			this.beatSpacing = beatSpacing;
 
+			var currentBeat = 1;
 			var spacingCss = 'width: '+beatSpacing+'px;';
 			var guidesHtml = '';
 			for(var bar=0; bar < numBars; bar++) {
 				for(var beat=0; beat < 4; beat++) {
 					if( beat == 0 ) {
-						guidesHtml += '<div data-bar="'+(bar+1)+'" data-beat="'+(beat+1)+'" class="beat bar" style="'+spacingCss+'"></div>';
+						guidesHtml += '<div data-bar="'+(bar+1)+'" data-beat="'+currentBeat+'" data-inner-beat="'+(beat+1)+'" class="beat bar" style="'+spacingCss+'"></div>';
 					} else {
-						guidesHtml += '<div data-bar="'+(bar+1)+'" data-beat="'+(beat+1)+'" class="beat" style="'+spacingCss+'"></div>';
+						guidesHtml += '<div data-bar="'+(bar+1)+'" data-beat="'+currentBeat+'" data-inner-beat="'+(beat+1)+'" class="beat" style="'+spacingCss+'"></div>';
 					}
+					currentBeat ++;
 				}
 			}
 
@@ -43,11 +46,12 @@ var Sequencer = (function() {
 		this.selectTrack = function(index) {
 			$('.main-sequencer .tracks .track').removeClass('active');
 			this.tracks[index].$trackDom.addClass('active');
-			this.activeTrack = index;
+			this.activeTrack = this.tracks[index];
+			this.activeTrackIndex = index;
 		}
 
 		this.addTrack = function(isMaster) {
-			var newTrack = new Track();
+			var newTrack = new Track(this);
 			newTrack.boot(audioContext);
 
 			if( ! isMaster ) {

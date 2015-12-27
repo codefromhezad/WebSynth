@@ -62,6 +62,7 @@ html, body {
 		    	float: left;
 		    	height: 100%;
 		    	border-left: 1px solid #ccc;
+		    	box-sizing: border-box;
 
 		    	&.bar {
 		    		border-color: #aaa;
@@ -97,6 +98,14 @@ html, body {
 				border-bottom: 1px solid #B7B7B7;
 				min-width: 100%;
 				box-sizing: border-box;
+
+				.midi-clip {
+					background: #ff386f;
+				    height: 100%;
+				    width: 68px;
+				    position: absolute;
+				    z-index: 2;
+				}
 			}
 
 			&.active {

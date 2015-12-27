@@ -17,17 +17,26 @@ jQuery( function($) {
     });
     
     $('.main-sequencer').on('click', '.tracks .track .left-pane', function(e) {
-        // Set a track as active
+        // Select a track as active
         e.preventDefault();
-
         seq.selectTrack($(this).closest('.track').attr('data-track-index'));
         return false;
     });
 
     $('.main-sequencer').on('dblclick', '.tracks-wrapper .guides .beat', function(e) {
-        // Adds a midi clip to the active track
+        // Add a midi clip to the active track
         e.preventDefault();
 
+        if( ! seq.activeTrack ) {
+            return false;
+        }
+
+        var $this = $(this);
+
+        var start = $this.attr('data-beat');
+        var duration = 4;
+
+        seq.activeTrack.addMidiClip(start, duration);
         return false;
     });
     
