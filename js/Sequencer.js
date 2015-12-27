@@ -15,17 +15,19 @@ var Sequencer = (function() {
 		this.masterTrack;
 		this.beatSpacing;
 
+		this.activeTrack;
+
 		this.generateTimeline = function(numBars, beatSpacing) {
 			this.beatSpacing = beatSpacing;
 
-			var spacingCss = 'margin-right: '+beatSpacing+'px;';
+			var spacingCss = 'width: '+beatSpacing+'px;';
 			var guidesHtml = '';
 			for(var bar=0; bar < numBars; bar++) {
 				for(var beat=0; beat < 4; beat++) {
 					if( beat == 0 ) {
-						guidesHtml += '<div class="beat bar" style="'+spacingCss+'"></div>';
+						guidesHtml += '<div data-bar="'+(bar+1)+'" data-beat="'+(beat+1)+'" class="beat bar" style="'+spacingCss+'"></div>';
 					} else {
-						guidesHtml += '<div class="beat" style="'+spacingCss+'"></div>';
+						guidesHtml += '<div data-bar="'+(bar+1)+'" data-beat="'+(beat+1)+'" class="beat" style="'+spacingCss+'"></div>';
 					}
 				}
 			}
@@ -38,15 +40,24 @@ var Sequencer = (function() {
 			$bpmContainer.text(this.bpm);
 		}
 
+		this.selectTrack = function(index) {
+			$('.main-sequencer .tracks .track').removeClass('active');
+			this.tracks[index].$trackDom.addClass('active');
+			this.activeTrack = index;
+		}
+
 		this.addTrack = function(isMaster) {
 			var newTrack = new Track();
 			newTrack.boot(audioContext);
 
 			if( ! isMaster ) {
+				newTrack.$trackDom.attr('data-track-index', this.tracks.length);
 				$tracksContainer.append(newTrack.$trackDom);
 				newTrack.setTitle("Track " + (this.tracks.length + 1));
 				newTrack.connect(this.masterTrack.gainNode);
 				this.tracks.push(newTrack);
+
+				this.selectTrack(this.tracks.length - 1);
 			} else {
 				newTrack.$mixerDom.addClass('master-track');
 				newTrack.setTitle("Master");

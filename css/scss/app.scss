@@ -61,11 +61,10 @@ html, body {
 		    .beat {
 		    	float: left;
 		    	height: 100%;
-		    	width: 1px;
-		    	background: #ccc;
+		    	border-left: 1px solid #ccc;
 
 		    	&.bar {
-		    		background: #aaa;
+		    		border-color: #aaa;
 		    	}
 		    }
 		}
@@ -98,6 +97,20 @@ html, body {
 				border-bottom: 1px solid #B7B7B7;
 				min-width: 100%;
 				box-sizing: border-box;
+			}
+
+			&.active {
+				.left-pane {
+					background: #666;
+
+					.track-title {
+						background: #9a9a9a;
+					}
+				}
+
+				.right-pane {
+					background: #fafafa;
+				}
 			}
 		}
 	}

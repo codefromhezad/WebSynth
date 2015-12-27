@@ -1,7 +1,7 @@
 jQuery( function($) {
     
     // Init sequencer    
-    window.seq = new Sequencer();
+    var seq = new Sequencer();
 
     /**
      * Bind general interface listeners
@@ -16,7 +16,20 @@ jQuery( function($) {
         return false;
     });
     
+    $('.main-sequencer').on('click', '.tracks .track .left-pane', function(e) {
+        // Set a track as active
+        e.preventDefault();
 
+        seq.selectTrack($(this).closest('.track').attr('data-track-index'));
+        return false;
+    });
+
+    $('.main-sequencer').on('dblclick', '.tracks-wrapper .guides .beat', function(e) {
+        // Adds a midi clip to the active track
+        e.preventDefault();
+
+        return false;
+    });
     
 
     //var midiWindow = new midiView($('.midi-view'), 8, 4);
