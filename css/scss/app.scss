@@ -65,10 +65,6 @@ html, body {
 					color: #000;
 					padding: 3px;
 				}
-
-				.track-effects {
-
-				}
 			}
 
 			.right-pane {
@@ -102,6 +98,11 @@ html, body {
 			float: left;
 			box-sizing: border-box;
 			position: relative;
+			
+			&.master-track {
+				width: 130px;
+				border-right-width: 4px;
+			}
 
 			.track-title {
 				line-height: 30px;
@@ -109,14 +110,24 @@ html, body {
 				background: #888;
 				border-bottom: 1px solid #444;
 			}
-
+			
 			.track-effects {
+				position: relative;
+				z-index: 1;
+
 				.effect-holder {
 					border-bottom: 1px solid #444;
 					height: 16px;
 
 					&:hover, &:focus {
 						background: #555;
+					}
+
+					span {
+						display: block;
+					    text-align: center;
+					    font-size: 12px;
+					    line-height: 16px;
 					}
 				}
 			}

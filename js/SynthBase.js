@@ -1,15 +1,14 @@
 var SynthBase = (function() {
     
     // Private variables
-    var audioContext;
     var voices = {};
 
     // Constructor
-    return function() {
+    return function(audioContext, dest) {
+        this.title = "SynthBase";
+        this.outputNode = dest;
 
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-        this.noteOn = function(noteName, velocity) {
+        this.noteOn = function(noteName) {
             // Checking Voice is not already in use
             if( voices[noteName] ) {
                 voices[noteName]['oscillator'].stop(0);
@@ -21,13 +20,13 @@ var SynthBase = (function() {
             voiceNodes['gain'] = audioContext.createGain();
 
             // Connecting nodes
-            voiceNodes['gain'].connect(audioContext.destination);
+            voiceNodes['gain'].connect(this.outputNode);
             voiceNodes['oscillator'].connect(voiceNodes['gain']);
 
             // Setting up nodes
             voiceNodes['oscillator'].type = 'square'; // sine, square, sawtooth, triangle or custom
             voiceNodes['oscillator'].frequency.value = Harmony.note( noteName );
-            voiceNodes['gain'].gain.value = velocity !== undefined ? Math.min(1, Math.max(0, velocity)) : 0.5;
+            voiceNodes['gain'].gain.value = 0.8;
 
             // Registering 
             voices[noteName] = voiceNodes;

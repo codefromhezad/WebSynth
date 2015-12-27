@@ -1,19 +1,23 @@
 jQuery( function($) {
     
     // Init sequencer    
-    var seq = new Sequencer();
+    window.seq = new Sequencer();
 
-    // Bind general interface listeners
+    /**
+     * Bind general interface listeners
+    **/
+
     $('.toolbar .ui-create-track').on('click', function(e) {
+        // Add track button
         e.preventDefault();
 
         seq.addTrack();
-        
+
         return false;
     });
     
 
-    var mySynth = new SynthBase();
+    
 
     //var midiWindow = new midiView($('.midi-view'), 8, 4);
 
