@@ -194,4 +194,39 @@ html, body {
 	}
 }
 
-@import 'midi_view';
+.midi-clip-editor-table {
+	border-collapse: collapse;
+	border: 1px solid #aaa;
+
+	tr {
+		line-height: 24px;
+	    height: 24px;
+	    border-bottom: 1px solid #aaa;
+	    font-size: 12px;
+	    font-style: italic;
+
+		th {
+			font-weight: normal;
+			text-align: right;
+			width: 100px;
+			padding-right: 10px;
+			border-right: 1px solid #aaa;
+		}
+
+		td {
+			border-right: 1px solid #ccc;
+		}
+
+		&.sharp {
+			th {
+				background: #222;
+				color: #fafafa;
+			}
+
+			td {
+				background: #EAEAEA;
+   				border-right: 1px solid #bbb;
+			}
+		}
+	}
+}
