@@ -5,7 +5,9 @@ var Track = function() {
 	this.isMaster = false;
 	this.title;
 	this.volume;
+
 	this.effects = [];
+	this.midiClips = [];
 
 	this.$trackDom = $('<div class="track">' +
 						'<div class="left-pane">'+
@@ -31,10 +33,7 @@ var Track = function() {
 	this.$volumeFader = this.$mixerDom.find('.track-volume .fader');
 	this.$title = this.$trackDom.find('.left-pane .track-title').add(this.$mixerDom.find('.track-title'));
 	this.$effectHolders = this.$mixerDom.find('.effect-holder');
-
-	var randomColor = function() {
-		return '#'+Math.floor(Math.random()*16777215).toString(16);
-	}
+	this.$clipsHolder = this.$trackDom.find('.right-pane');
 
 	this.addEffect = function(effect) {
 		var fxIndex = this.effects.length;
@@ -44,6 +43,11 @@ var Track = function() {
 
 		this.$effectHolders.eq(fxIndex).html(fxHtml);
 		this.effects.push(effect);
+	}
+
+	this.addMidiClip = function(start, duration) {
+		var newClip = new MidiClip(start, duration);
+		this.$clipsHolder.append(newclip.$dom);
 	}
 
 	this.setVolume = function(value) {
@@ -87,7 +91,7 @@ var Track = function() {
 			start: function(event, ui) {
 				if( that.isMaster )
 					return;
-				
+
 				that.effects[0].noteOn('C4');
 				setTimeout(function() {
 	                that.effects[0].noteOff('C4');

@@ -1,5 +1,5 @@
 
-var midiView = function($dest, numBeatsPerClip, numQuartersPerBeat) {
+var MidiView = function($dest, numBeatsPerClip, numQuartersPerBeat) {
 
 	this.$dest = $dest;
 	this.numBeatsPerClip;
