@@ -28,6 +28,7 @@ jQuery( function($) {
         e.preventDefault();
 
         if( ! seq.activeTrack ) {
+            seq.addTrack();
             return false;
         }
 
@@ -44,8 +45,8 @@ jQuery( function($) {
     $('.midi-clip-editor').dialog({
         autoOpen: false,
         maxHeight: 400,
-        maxWidth: 800,
-        minWidth: 400,
+        maxWidth: 900,
+        minWidth: 600,
         title: 'MIDI Clip Editor',
         buttons: [{
             text: "OK",
