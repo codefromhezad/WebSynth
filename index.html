@@ -11,10 +11,6 @@
     <div class="main-sequencer">
         <div class="toolbar">
             <button class="ui-create-track">Add track</button>
-
-            <div class="indicators">
-                <div>BPM <span class="bpm-indicator"></span></div>
-            </div>
         </div>
         
         <div class="tracks-wrapper">
@@ -22,7 +18,18 @@
             <div class="tracks"></div>
         </div>
 
-        <div class="mixer"></div>
+        <div class="mixer-wrapper">
+            <div class="playback-bar">
+                <div class="buttons">
+                    <a href="#" class="play-pause">Play</a>
+                </div>
+                <div class="indicators">
+                    <div>BPM <span class="bpm-indicator"></span></div>
+                </div>
+            </div>
+
+            <div class="mixer"></div>
+        </div>
     </div>
 
     <div class="midi-clip-editor"></div>
