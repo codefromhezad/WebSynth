@@ -9,6 +9,7 @@ var Track = function(seq) {
 
 	this.effects = [];
 	this.midiClips = [];
+	this.mainInstrument = null;
 
 	this.$trackDom = $('<div class="track">' +
 						'<div class="left-pane">'+
@@ -42,6 +43,10 @@ var Track = function(seq) {
 						effect.title+
 					 '</span>';
 
+		if( effect.isInstrument ) {
+			this.mainInstrument = effect;
+		}
+		
 		this.$effectHolders.eq(fxIndex).html(fxHtml);
 		this.effects.push(effect);
 	}

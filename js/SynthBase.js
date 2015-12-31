@@ -8,6 +8,8 @@ var SynthBase = (function() {
         this.title = "SynthBase";
         this.outputNode = dest;
 
+        this.isInstrument = true;
+
         this.noteOn = function(noteName) {
             // Checking Voice is not already in use
             if( voices[noteName] ) {
@@ -43,6 +45,18 @@ var SynthBase = (function() {
                     voices[noteName]['oscillator'].stop(0);
                 }
             }
+        }
+
+        this.noteOnForDuration = function(noteName, duration) {
+            var thatSynth = this;
+
+            this.noteOn( noteName );
+
+            ( function(noteName) {
+                setTimeout(function() {
+                    thatSynth.noteOff(noteName);
+                }, duration);
+            }) (noteName);
         }
     }
 })();

@@ -24,6 +24,8 @@ var Sequencer = (function() {
 		this.playbackTimer = 0;
 		this.playbackInterval;
 
+		this.notesPerBeatArray;
+
 		this.generateTimeline = function(numBars, beatSpacing) {
 			this.beatSpacing = beatSpacing;
 
@@ -79,15 +81,42 @@ var Sequencer = (function() {
 			$mixerContainer.append(newTrack.$mixerDom);
 		}
 
+		this.buildNotesPerBeatArray = function() {
+			var notesPerBeat = [];
+
+			for(var t in this.tracks) {
+				var track = this.tracks[t];
+
+				for(var c in track.midiClips) {
+					var midiClip = track.midiClips[c];
+
+					for(var n in midiClip.notes) {
+						var note = midiClip.notes[n];
+						var start = parseInt(note.start) + parseInt(midiClip.start) - 1;
+
+						if( ! notesPerBeat[start] ) {
+							notesPerBeat[start] = [];
+						}
+
+						notesPerBeat[start].push({
+							note: note,
+							track: track
+						});
+					}
+				}
+			}
+
+			this.notesPerBeatArray = notesPerBeat;
+		}
+
 		// PLAYBACK METHODS
-		this.updateTimerUI = function(reset) {
+		this.updateTimerUI = function() {
 			var floatSecs = this.playbackTimer / 1000;
 			var minutes = (floatSecs / 60) << 0;
 			var secs = (floatSecs % 60) << 0;
 			var millisecs = (this.playbackTimer % 1000) << 0;
 
 			$playbackTimerIndicator.text(numPad(minutes, 2)+':'+numPad(secs, 2)+':'+numPad(millisecs, 3));
-
 
 			var beatsPerSecond = this.bpm / 60;
 			var beatsPerMillisecond = beatsPerSecond / 1000;
@@ -97,20 +126,54 @@ var Sequencer = (function() {
 			$playbackNowIndicator.css('left', distLeft+'px');
 		}
 
+		this.getCurrentBeat = function() {
+			return Math.floor(this.bpm * ((this.playbackTimer / 1000) / 60)) + 1;
+		}
+
+		this.millisPerBeat = function() {
+			return 1 / ( (this.bpm / 60) / 1000 );
+		}
+
 		this.play = function() {
 			var thatInPlayback = this;
 
+			this.buildNotesPerBeatArray();
 			this.isPlaying = true;
+
+			var lastPlaybackBeat = -1;
 
 			this.playbackInterval = setInterval(function() {
 				thatInPlayback.playbackTimer += 100;
-
 				thatInPlayback.updateTimerUI();
+				
+				var currBeat = thatInPlayback.getCurrentBeat();
+
+				if( currBeat != lastPlaybackBeat ) {
+
+					if( thatInPlayback.notesPerBeatArray[currBeat] ) {
+						var items = thatInPlayback.notesPerBeatArray[currBeat];
+
+						for(var i in items) {
+							var item = items[i];
+
+							var note = item.note;
+							var track = item.track;
+							
+							if( track.mainInstrument ) {
+								track.mainInstrument.noteOnForDuration(note.note, note.duration * thatInPlayback.millisPerBeat());
+							}
+						}
+					}
+
+					lastPlaybackBeat = currBeat;
+				}
+
 			}, 100);
 		}
 
 		this.pause = function() {
 			clearInterval(this.playbackInterval);
+			this.updateTimerUI();
 			this.isPlaying = false;
 		}
 
