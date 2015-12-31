@@ -47,6 +47,17 @@ html, body {
 		    height: 100%;
 		    z-index: 1;
 
+		    .playback-now {
+		    	position: absolute;
+		    	top: 0;
+		    	left: 0;
+		    	width: 1px;
+		    	height: 100%;
+		    	box-sizing: border-box;
+		    	background: #09252F;
+		    	box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.4);
+		    }
+
 		    .beat {
 		    	float: left;
 		    	height: 100%;

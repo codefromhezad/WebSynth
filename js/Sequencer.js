@@ -6,6 +6,7 @@ var Sequencer = (function() {
 	var $tracksContainer = $('.main-sequencer .tracks');
 	var $mixerContainer = $('.main-sequencer .mixer');
 	var $bpmContainer = $('.main-sequencer .bpm-indicator');
+	var $playbackTimerIndicator = $('.main-sequencer .playback-timer');
 	var $guidesContainer = $('.main-sequencer .tracks-wrapper .guides')
 
 	return function() {
@@ -18,12 +19,16 @@ var Sequencer = (function() {
 		this.activeTrackIndex;
 		this.activeTrack;
 
+		this.isPlaying = false;
+		this.playbackTimer = 0;
+		this.playbackInterval;
+
 		this.generateTimeline = function(numBars, beatSpacing) {
 			this.beatSpacing = beatSpacing;
 
 			var currentBeat = 1;
 			var spacingCss = 'width: '+beatSpacing+'px;';
-			var guidesHtml = '';
+			var guidesHtml = '<div class="playback-now"></div>';
 			for(var bar=0; bar < numBars; bar++) {
 				for(var beat=0; beat < 4; beat++) {
 					if( beat == 0 ) {
@@ -72,6 +77,79 @@ var Sequencer = (function() {
 			
 			$mixerContainer.append(newTrack.$mixerDom);
 		}
+
+		// PLAYBACK METHODS
+		this.play = function() {
+			var thatInPlayback = this;
+
+			var $playbackNowIndicator = $('.main-sequencer .guides .playback-now');
+
+			this.isPlaying = true;
+
+			this.playbackInterval = setInterval(function() {
+				thatInPlayback.playbackTimer += 100;
+
+				var floatSecs = thatInPlayback.playbackTimer / 1000;
+				var minutes = (floatSecs / 60) << 0;
+				var secs = (floatSecs % 60) << 0;
+				var millisecs = (thatInPlayback.playbackTimer % 1000) << 0;
+
+				$playbackTimerIndicator.text(numPad(minutes, 2)+':'+numPad(secs, 2)+':'+numPad(millisecs, 3));
+				
+				var beatsPerSecond = thatInPlayback.bpm / 60;
+				var beatsPerMillisecond = beatsPerSecond / 1000;
+
+				var distLeft = Math.floor(thatInPlayback.beatSpacing * thatInPlayback.playbackTimer * beatsPerMillisecond);
+
+				$playbackNowIndicator.css('left', distLeft+'px');
+			}, 100);
+		}
+
+		this.pause = function() {
+			clearInterval(this.playbackInterval);
+			this.isPlaying = false;
+		}
+
+		this.stop = function() {
+			var $playbackNowIndicator = $('.main-sequencer .guides .playback-now');
+			clearInterval(this.playbackInterval);
+			this.playbackTimer = 0;
+			$playbackTimerIndicator.text('00:00:000');
+			$playbackNowIndicator.css('left', '0px');
+			this.isPlaying = false;
+		}
+
+
+		// UI Listeners
+		var thatSeq = this;
+		$('.main-sequencer').on('click', '.playback-bar .play-pause', function(e) {
+	        // Play/pause playback
+	        e.preventDefault();
+
+	        var $this = $(this);
+
+	        if( ! thatSeq.isPlaying ) {
+	            $this.text('Pause');
+	            thatSeq.play();
+	        } else {
+	            $this.text('Play');
+	            thatSeq.pause();
+	        }
+
+	        return false;
+	    });
+
+	    $('.main-sequencer').on('click', '.playback-bar .stop', function(e) {
+	        // Stop playback
+	        e.preventDefault();
+
+	        $('.main-sequencer .playback-bar .play-pause').text('Play');
+
+	        thatSeq.stop();
+
+	        return false;
+	    });
+
 
 		// Boot and create Master Track
 		this.setBPM(120);

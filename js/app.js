@@ -5,7 +5,7 @@ jQuery( function($) {
 
     // While developping, add a default empty track
     seq.addTrack();
-    
+
     /**
      * Bind general interface listeners
     **/
@@ -43,6 +43,7 @@ jQuery( function($) {
         seq.activeTrack.addMidiClip(start, duration);
         return false;
     });
+
     
     // Register Dialogs
     $('.midi-clip-editor').dialog({
