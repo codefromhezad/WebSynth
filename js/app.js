@@ -3,6 +3,9 @@ jQuery( function($) {
     // Init sequencer    
     var seq = new Sequencer();
 
+    // While developping, add a default empty track
+    seq.addTrack();
+    
     /**
      * Bind general interface listeners
     **/
