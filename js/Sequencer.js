@@ -8,6 +8,7 @@ var Sequencer = (function() {
 	var $bpmContainer = $('.main-sequencer .bpm-indicator');
 	var $playbackTimerIndicator = $('.main-sequencer .playback-timer');
 	var $guidesContainer = $('.main-sequencer .tracks-wrapper .guides')
+	var $playbackNowIndicator = $('.main-sequencer .playback-now-wrapper .playback-now');;
 
 	return function() {
 
@@ -28,7 +29,7 @@ var Sequencer = (function() {
 
 			var currentBeat = 1;
 			var spacingCss = 'width: '+beatSpacing+'px;';
-			var guidesHtml = '<div class="playback-now"></div>';
+			var guidesHtml = '';
 			for(var bar=0; bar < numBars; bar++) {
 				for(var beat=0; beat < 4; beat++) {
 					if( beat == 0 ) {
@@ -79,29 +80,32 @@ var Sequencer = (function() {
 		}
 
 		// PLAYBACK METHODS
+		this.updateTimerUI = function(reset) {
+			var floatSecs = this.playbackTimer / 1000;
+			var minutes = (floatSecs / 60) << 0;
+			var secs = (floatSecs % 60) << 0;
+			var millisecs = (this.playbackTimer % 1000) << 0;
+
+			$playbackTimerIndicator.text(numPad(minutes, 2)+':'+numPad(secs, 2)+':'+numPad(millisecs, 3));
+
+
+			var beatsPerSecond = this.bpm / 60;
+			var beatsPerMillisecond = beatsPerSecond / 1000;
+
+			var distLeft = Math.floor(this.beatSpacing * this.playbackTimer * beatsPerMillisecond);
+
+			$playbackNowIndicator.css('left', distLeft+'px');
+		}
+
 		this.play = function() {
 			var thatInPlayback = this;
-
-			var $playbackNowIndicator = $('.main-sequencer .guides .playback-now');
 
 			this.isPlaying = true;
 
 			this.playbackInterval = setInterval(function() {
 				thatInPlayback.playbackTimer += 100;
 
-				var floatSecs = thatInPlayback.playbackTimer / 1000;
-				var minutes = (floatSecs / 60) << 0;
-				var secs = (floatSecs % 60) << 0;
-				var millisecs = (thatInPlayback.playbackTimer % 1000) << 0;
-
-				$playbackTimerIndicator.text(numPad(minutes, 2)+':'+numPad(secs, 2)+':'+numPad(millisecs, 3));
-				
-				var beatsPerSecond = thatInPlayback.bpm / 60;
-				var beatsPerMillisecond = beatsPerSecond / 1000;
-
-				var distLeft = Math.floor(thatInPlayback.beatSpacing * thatInPlayback.playbackTimer * beatsPerMillisecond);
-
-				$playbackNowIndicator.css('left', distLeft+'px');
+				thatInPlayback.updateTimerUI();
 			}, 100);
 		}
 
@@ -111,11 +115,10 @@ var Sequencer = (function() {
 		}
 
 		this.stop = function() {
-			var $playbackNowIndicator = $('.main-sequencer .guides .playback-now');
 			clearInterval(this.playbackInterval);
 			this.playbackTimer = 0;
-			$playbackTimerIndicator.text('00:00:000');
-			$playbackNowIndicator.css('left', '0px');
+			this.updateTimerUI();
+
 			this.isPlaying = false;
 		}
 
